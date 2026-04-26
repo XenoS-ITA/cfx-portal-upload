@@ -286,7 +286,7 @@ async function uploadZip(
   chunkSize: number,
   cookies: string
 ): Promise<void> {
-  const [_, versionId] = await startReupload(
+  const [assetIdReupload, versionId] = await startReupload(
     zipPath,
     assetId,
     chunkSize,
@@ -310,7 +310,7 @@ async function uploadZip(
     })
 
     await axios.post(
-      getUrl('UPLOAD_CHUNK', { id: assetId, version_id: versionId }),
+      getUrl('UPLOAD_CHUNK', { id: assetIdReupload, version_id: versionId }),
       form,
       {
         headers: {
@@ -325,7 +325,7 @@ async function uploadZip(
     chunkIndex++
   }
 
-  await completeUpload(assetId, versionId, cookies)
+  await completeUpload(assetIdReupload, versionId, cookies)
 }
 
 /**
@@ -336,7 +336,7 @@ async function uploadZip(
  * @returns {Promise<void>} Resolves when the upload is complete.
  */
 async function completeUpload(
-  assetId: string,
+  assetId: number,
   versionId: number,
   cookies: string
 ): Promise<void> {
